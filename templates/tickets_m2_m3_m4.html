@@ -1,0 +1,71 @@
+{% extends 'base_comun.html' %}
+{% block titulo %}Tickets{% endblock %}
+{% block contenido %}
+<div class="titulo-pagina">
+    <div>
+        <p class="sobretitulo">MESA DE AYUDA</p>
+        <h1>{{ 'Tickets de soporte' if usuario_actual.rol == 'Administrador' else 'Mis tickets' }}</h1>
+        <p class="secundario">Consulta el estado de tus solicitudes y sus tiempos de atención.</p>
+    </div><a class="boton primario" href="{{ url_for('ticket_nuevo') }}">+ Nuevo ticket</a>
+</div>
+<form method="GET" class="filtros tarjeta">
+    <div><label for="q">Buscar solicitud</label><input id="q" name="q" placeholder="Asunto o número de ticket"
+            value="{{ request.args.get('q','') }}" maxlength="150"></div>
+    <div><label for="estado">Estado</label><select name="estado" id="estado">
+            <option value="">Todos los estados</option>{% for estado in estados %}<option {% if
+                request.args.get('estado')==estado %}selected{% endif %}>{{ estado }}</option>{% endfor %}
+        </select></div>
+    <div><label for="prioridad">Prioridad</label><select name="prioridad" id="prioridad">
+            <option value="">Todas las prioridades</option>{% for p in ['Alta','Media','Baja'] %}<option {% if
+                request.args.get('prioridad')==p %}selected{% endif %}>{{ p }}</option>{% endfor %}
+        </select></div><button class="boton primario">Filtrar</button><a class="boton"
+        href="{{ url_for('tickets') }}">Limpiar</a>
+</form>
+<div class="leyenda"><span class="punto verde"></span> En plazo <span class="punto amarillo"></span> Por vencer (≥75%)
+    <span class="punto rojo"></span> Vencido <span class="secundario">Actualiza la página para recalcular los
+        tiempos.</span></div>
+<section class="tarjeta sin-padding">
+    <div class="encabezado-seccion">
+        <h2>Solicitudes registradas</h2><span class="secundario">{{ tickets|length }} resultado(s)</span>
+    </div>
+    <div class="tabla-scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th>Ticket / asunto</th>
+                    <th>Prioridad</th>
+                    <th>Estado</th>
+                    <th>Responsable</th>
+                    <th>Atención SLA</th>
+                    <th>Registrado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in tickets %}<tr>
+                    <td>
+                        <div class="celda-ticket">{% if t.foto_id %}<img class="miniatura"
+                                src="{{ url_for('ver_foto', foto_id=t.foto_id, mini=1) }}"
+                                alt="Evidencia del ticket {{ t.id }}">{% else %}<span class="sin-foto"
+                                aria-hidden="true">TI</span>{% endif %}<div><a class="asunto"
+                                    href="{{ url_for('ticket_detalle', ticket_id=t.id) }}">#{{ '%04d'|format(t.id) }} ·
+                                    {{ t.asunto }}</a><small>{{ t.categoria }} · {{ t.solicitante }}</small></div>
+                        </div>
+                    </td>
+                    <td><span class="prioridad {{ t.prioridad|lower }}">{{ t.prioridad }}</span></td>
+                    <td><span class="estado">{{ t.estado }}</span></td>
+                    <td>{{ t.tecnico or 'Sin asignar' }}</td>
+                    <td><span class="semaforo {{ t.sla.color }}">● {{ t.sla.texto }}</span>{% if not t.fecha_resolucion
+                        %}<small>{{ t.sla.restante }} restantes</small>{% endif %}</td>
+                    <td>{{ t.created_at|fecha }}</td>
+                </tr>
+                {% else %}<tr>
+                    <td colspan="6" class="vacio">
+                        <h3>No hay tickets para mostrar</h3>
+                        <p>Crea una solicitud o modifica los filtros de búsqueda.</p>
+                    </td>
+                </tr>{% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

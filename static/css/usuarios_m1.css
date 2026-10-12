@@ -1,0 +1,229 @@
+/* Modulo M1. */
+
+.formulario-centrado {
+    max-width: 720px;
+}
+
+.acceso {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 80px;
+    max-width: 1060px;
+    margin: 55px auto;
+    align-items: center;
+}
+
+.presentacion h1 {
+    font-size: 48px;
+    line-height: 1.12;
+    margin: 20px 0;
+}
+
+.presentacion>p:not(.sobretitulo) {
+    max-width: 430px;
+    color: var(--muted);
+    font-size: 16px;
+}
+
+.pasos {
+    list-style: none;
+    padding: 0;
+    margin: 32px 0;
+}
+
+.pasos li {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 20px 0;
+    font-weight: 500;
+}
+
+.pasos span {
+    background: #e9eefc;
+    color: var(--azul);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 7px 10px;
+    border-radius: 6px;
+}
+
+.nota {
+    border-left: 3px solid var(--azul);
+    padding: 2px 0 2px 15px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.login {
+    padding: 38px;
+}
+
+.login h2 {
+    font-size: 25px;
+}
+
+.login .primario {
+    margin-top: 17px;
+}
+
+@media(max-width:1050px) {
+    .acceso {
+        gap: 35px;
+        margin: 25px auto;
+    }
+    
+    .presentacion h1 {
+        font-size: 38px;
+    }
+}
+
+@media(max-width:700px) {
+    .acceso {
+        grid-template-columns: 1fr;
+    }
+    
+    .acceso {
+        margin: 0;
+    }
+    
+    .presentacion {
+        padding: 12px;
+    }
+    
+    .presentacion h1 {
+        font-size: 35px;
+    }
+    
+    .pasos,
+    .nota {
+        display: none;
+    }
+    
+    .login {
+        padding: 22px;
+    }
+}
+
+/* Apariencia tomada de los nuevos wireframes; se conserva la distribucion. */
+
+.presentacion {
+    padding: 38px;
+    color: #dbeafe;
+    background: radial-gradient(circle at 80% 16%, rgba(94, 234, 212, .34), transparent 13rem),
+    linear-gradient(145deg, #132b61, #14213d 65%, #0f766e);
+    border-radius: 24px;
+    box-shadow: 0 24px 48px rgba(15, 23, 42, .2);
+}
+
+.presentacion h1 {
+    color: #fff;
+}
+
+.presentacion .sobretitulo {
+    color: #5eead4;
+}
+
+.presentacion > p:not(.sobretitulo) {
+    color: #dbeafe;
+}
+
+.pasos span {
+    color: #075d66;
+    background: #d9fbf6;
+    border-radius: 9px;
+}
+
+.nota {
+    color: #cbd5e1;
+    border-left-color: #5eead4;
+}
+
+.login {
+    border-radius: 22px;
+}
+
+@media (max-width: 700px) {
+    .presentacion {
+        padding: 27px 24px;
+        border-radius: 18px;
+    }
+}
+
+/* Login: paneles simétricos y footer dentro del espacio disponible. */
+body.pagina-login {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+.pagina-login > .cabecera,
+.pagina-login > .pie-pagina {
+    flex-shrink: 0;
+}
+.pagina-login > .contenedor {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    max-width: 1360px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.pagina-login .acceso {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(24px, 2.5vw, 40px);
+    align-items: stretch;
+}
+.pagina-login .acceso > section {
+    margin: 0;
+    min-width: 0;
+    padding: clamp(28px, 3vw, 48px);
+    min-height: clamp(480px, 58vh, 620px);
+    border-radius: 22px;
+    display: flex;
+    flex-direction: column;
+}
+.pagina-login .presentacion h1 {
+    font-size: clamp(34px, 3.2vw, 50px);
+    margin: 14px 0 18px;
+}
+.pagina-login .pasos { margin: 16px 0 24px; }
+.pagina-login .pasos li { margin: 14px 0; }
+.pagina-login .nota { margin-top: auto; }
+.pagina-login .login .formulario { margin-top: 12px; }
+.pagina-login .login .ayuda { margin-top: auto; padding-top: 20px; margin-bottom: 0; }
+.pagina-login > .pie-pagina { padding-top: 20px; padding-bottom: 20px; }
+.pagina-login .login h2 { font-size: clamp(26px, 2vw, 32px); }
+.pagina-login .login .secundario,
+.pagina-login .pasos li { font-size: 16px; }
+.pagina-login .login label { font-size: 14px; }
+.pagina-login .login input:not([type="hidden"]) { min-height: 48px; font-size: 16px; }
+.pagina-login .login .boton { min-height: 48px; font-size: 15px; }
+.pagina-login .login .ayuda,
+.pagina-login .nota { font-size: 13px; }
+/* En escritorio la altura depende del contenido, no de la altura de la pantalla. */
+@media (min-width: 701px) {
+    .pagina-login .acceso > section { min-height: 0; }
+    .pagina-login .login .ayuda {
+        margin-top: 20px;
+        padding-top: 0;
+    }
+}
+@media (max-height: 800px) and (min-width: 701px) {
+    .pagina-login > .contenedor { padding-top: 20px; padding-bottom: 20px; }
+    .pagina-login .acceso > section { min-height: 0; padding: 28px; }
+    .pagina-login .presentacion h1 { font-size: 36px; }
+    .pagina-login .pasos { margin: 12px 0 18px; }
+    .pagina-login .pasos li { margin: 10px 0; }
+}
+@media (max-width: 700px) {
+    .pagina-login > .contenedor { padding: 24px 16px; }
+    .pagina-login .acceso { grid-template-columns: 1fr; gap: 20px; }
+    .pagina-login .acceso > section { padding: 24px; min-height: 0; border-radius: 18px; }
+    .pagina-login .presentacion h1 { font-size: 30px; }
+}

@@ -1,0 +1,120 @@
+/* Modulo M4. */
+
+.leyenda {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    margin: 10px 0 20px;
+    flex-wrap: wrap;
+}
+
+.leyenda .secundario {
+    margin-left: auto;
+}
+
+.punto {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-left: 10px;
+}
+
+.punto.verde {
+    background: var(--verde);
+}
+
+.punto.amarillo {
+    background: #d99a12;
+}
+
+.punto.rojo {
+    background: var(--rojo);
+}
+
+.semaforo {
+    font-size: 12px;
+    font-weight: 650;
+    white-space: nowrap;
+}
+
+.semaforo.verde {
+    color: var(--verde);
+}
+
+.semaforo.amarillo {
+    color: var(--amarillo);
+}
+
+.semaforo.rojo {
+    color: var(--rojo);
+}
+
+.barra {
+    background: #e9edf4;
+    height: 7px;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 22px 0;
+}
+
+.barra {
+    appearance: none;
+    -webkit-appearance: none;
+    display: block;
+    width: 100%;
+    border: 0;
+}
+
+.barra.verde { --relleno-sla: var(--verde); }
+.barra.amarillo { --relleno-sla: #d99a12; }
+.barra.rojo { --relleno-sla: var(--rojo); }
+
+.barra::-webkit-progress-bar {
+    background: #e9eff7;
+    border-radius: 99px;
+}
+
+.barra::-webkit-progress-value {
+    background: var(--relleno-sla);
+    border-radius: 99px;
+}
+
+.barra::-moz-progress-bar {
+    background: var(--relleno-sla);
+    border-radius: 99px;
+}
+
+.tiempo-sla {
+    font-size: 54px;
+    font-weight: 700;
+    margin: 15px 0;
+    letter-spacing: -2px;
+}
+
+.tiempo-sla span {
+    font-size: 17px;
+    letter-spacing: 0;
+    color: var(--muted);
+    font-weight: 400;
+}
+
+@media(max-width:700px) {
+    .leyenda .secundario {
+        width: 100%;
+        margin: 5px 0;
+    }
+}
+
+/* Apariencia tomada de los nuevos wireframes; se conserva la distribucion. */
+
+.punto {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .07);
+}
+
+.barra {
+    background: #e9eff7;
+    border-radius: 99px;
+}

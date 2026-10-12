@@ -1,0 +1,30 @@
+{% extends 'base_comun.html' %}
+{% block titulo %}{{ "Reportes" if es_reporte else "Dashboard" }}{% endblock %}
+{% block contenido %}
+
+<div class="titulo-pagina"><div><p class="sobretitulo">SEGUIMIENTO DEL SOPORTE</p><h1>{{ 'Reportes de tickets' if es_reporte else 'Dashboard de tickets' }}</h1><p class="secundario">Consulta y analiza las solicitudes de soporte.</p></div>
+<a class="boton" href="{{ url_for('dashboard' if es_reporte else 'reportes', **filtros) }}">{{ 'Ver dashboard' if es_reporte else 'Ver reportes' }}</a></div>
+<form method="GET" class="filtros tarjeta filtros-analisis">
+<div><label for="desde">Desde</label><input type="date" id="desde" name="desde" value="{{ filtros.desde }}"></div>
+<div><label for="hasta">Hasta</label><input type="date" id="hasta" name="hasta" value="{{ filtros.hasta }}"></div>
+<div><label for="estado">Estado</label><select id="estado" name="estado"><option value="">Todos</option>{% for e in estados %}<option {% if filtros.estado == e %}selected{% endif %}>{{ e }}</option>{% endfor %}</select></div>
+<div><label for="prioridad">Prioridad</label><select id="prioridad" name="prioridad"><option value="">Todas</option>{% for p in ['Alta','Media','Baja'] %}<option {% if filtros.prioridad == p %}selected{% endif %}>{{ p }}</option>{% endfor %}</select></div>
+<button class="boton primario" type="submit">Filtrar</button><a class="boton" href="{{ url_for(request.endpoint) }}">Limpiar filtros</a>
+</form>
+{% if es_reporte %}
+<section class="tarjeta"><div class="encabezado-seccion"><div><h2>Resultados</h2><p class="secundario">{{ total }} ticket(s) encontrados · Mostrando {{ tickets|length }}. Las exportaciones incluyen hasta 1000 resultados.</p></div>
+<div class="acciones"><a class="boton accion-confirmar" href="{{ url_for('exportar_reporte', formato='xlsx', **filtros) }}">Descargar Excel</a><a class="boton primario" href="{{ url_for('exportar_reporte', formato='pdf', **filtros) }}">Descargar PDF</a></div></div>
+<div class="tabla-scroll"><table><thead><tr><th>Ticket / asunto</th><th>Categoría</th><th>Prioridad</th><th>Estado</th><th>Responsable</th><th>Registrado</th><th>SLA</th></tr></thead>
+<tbody>{% for t in tickets %}<tr><td><a class="asunto" href="{{ url_for('ticket_detalle', ticket_id=t.id) }}">#{{ t.id }} · {{ t.asunto }}</a><small>{{ t.solicitante }}</small></td><td>{{ t.categoria }}</td><td>{{ t.prioridad }}</td><td>{{ t.estado }}</td><td>{{ t.tecnico or 'Sin asignar' }}</td><td>{{ t.created_at|fecha }}</td><td><span class="semaforo {{ t.sla.color }}">{{ t.sla.texto }}</span></td></tr>{% else %}<tr><td colspan="7" class="vacio">No hay tickets para estos filtros.</td></tr>{% endfor %}</tbody></table></div></section>
+{% else %}
+<section class="tarjeta resumen-total"><div><p class="sobretitulo">TICKETS EN EL PERÍODO</p><strong class="total-numero">{{ resumen.total }}</strong></div><p class="secundario">Las fechas corresponden al registro del ticket, en hora de Perú.<br>Se incluyen ambos días del período seleccionado.</p></section>
+{% if not resumen.total %}<div class="aviso" role="status">No hay tickets para estos filtros. Modifica el período o limpia los filtros.</div>{% endif %}
+<div class="graficos-grid">
+{% for clave, titulo in [('por_estado','Por estado'),('por_prioridad','Por prioridad'),('por_responsable','Por responsable'),('por_categoria','Por categoría')] %}
+<section class="tarjeta"><h2>{{ titulo }}</h2><div class="grafico-barras" role="list" aria-label="{{ titulo }}">
+{% for fila in resumen[clave] %}<div class="fila-grafico" role="listitem"><div><span>{{ fila.etiqueta }}</span><strong>{{ fila.cantidad }}</strong></div><progress class="pista-grafico" max="100" value="{{ (fila.cantidad * 100 / resumen.total)|round(1) if resumen.total else 0 }}" aria-hidden="true"></progress></div>{% else %}<p class="secundario">Sin datos para mostrar.</p>{% endfor %}
+</div></section>
+{% endfor %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,421 @@
+:root {
+    --azul: #234bc4;
+    --tinta: #172745;
+    --muted: #617089;
+    --borde: #dfe5ef;
+    --fondo: #f5f7fb;
+    --verde: #147347;
+    --amarillo: #8b6000;
+    --rojo: #b32938;
+}
+
+
+/* =========================
+   GENERAL
+   ========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    color: var(--tinta);
+    background: var(--fondo);
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+a {
+    color: var(--azul);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+p {
+    margin-top: 0;
+}
+
+h1 {
+    font-size: 30px;
+    line-height: 1.25;
+    letter-spacing: -0.7px;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 18px;
+    margin-bottom: 12px;
+}
+
+h3 {
+    font-size: 15px;
+}
+
+small {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+
+/* =========================
+   CONTENEDOR
+   ========================= */
+
+.contenedor {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 36px 36px 64px;
+    min-height: calc(100vh - 150px);
+}
+
+
+/* =========================
+   TÍTULO DE LA PÁGINA
+   ========================= */
+
+.titulo-pagina {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin: 12px 0 28px;
+}
+
+.titulo-pagina p:last-child {
+    margin-bottom: 0;
+}
+
+.sobretitulo {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.3px;
+    color: var(--azul);
+    margin-bottom: 9px;
+}
+
+.secundario {
+    color: var(--muted);
+}
+
+
+/* =========================
+   TARJETA PRINCIPAL
+   ========================= */
+
+.tarjeta {
+    background: white;
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    padding: 26px;
+    margin-bottom: 22px;
+    box-shadow: 0 2px 5px rgba(23, 39, 69, 0.03);
+}
+
+.sin-padding {
+    padding: 0;
+    overflow: hidden;
+}
+
+
+/* =========================
+   BOTONES
+   ========================= */
+
+.boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--borde);
+    border-radius: 7px;
+
+    padding: 10px 16px;
+
+    line-height: 1.5;
+
+    color: var(--tinta);
+
+    font-weight: 600;
+    font-size: 13px;
+
+    background: white;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.boton:hover {
+    text-decoration: none;
+    background: #eef2fa;
+}
+
+.boton:active {
+    transform: scale(0.98);
+}
+
+
+/* =========================
+   NOTIFICACIONES / TICKETS
+   ========================= */
+
+.notificacion {
+    display: flex;
+
+    gap: 18px;
+
+    align-items: center;
+
+    padding: 24px;
+
+    background: white;
+
+    border-bottom: 1px solid var(--borde);
+
+    /*
+       Animación del ticket
+    */
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.notificacion:last-child {
+    border-bottom: 0;
+}
+
+
+/* Contenido del ticket */
+
+.notificacion > div {
+    flex: 1;
+}
+
+
+/* Título del ticket */
+
+.notificacion h2 {
+    font-size: 15px;
+    margin-bottom: 5px;
+}
+
+
+/* =========================
+   TICKET PENDIENTE
+   ========================= */
+
+.notificacion.pendiente {
+    background: #f8faff;
+    border-left: 3px solid var(--azul);
+}
+
+
+/* =========================
+   EFECTO AL PASAR EL MOUSE
+   TODOS LOS TICKETS
+   ========================= */
+
+.notificacion:hover {
+    /*
+       Se agranda ligeramente
+    */
+    transform: scale(1.02);
+
+    /*
+       Sombra azul suave
+    */
+    box-shadow: 0 6px 20px rgba(35, 75, 196, 0.18);
+
+    /*
+       Fondo
+    */
+    background: #ffffff;
+
+    /*
+       Hace que quede por encima
+    */
+    position: relative;
+    z-index: 2;
+}
+
+
+/* =========================
+   ICONO DE NOTIFICACIÓN
+   ========================= */
+
+.icono-texto {
+    display: grid;
+
+    place-items: center;
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 9px;
+
+    background: #edf1fc;
+
+    color: var(--azul);
+
+    font-size: 20px;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================
+   FORMULARIO DE NOTIFICACIÓN
+   ========================= */
+
+.notificacion form {
+    margin: 0;
+}
+
+.notificacion form button {
+    flex-shrink: 0;
+}
+
+
+/* =========================
+   FOOTER
+   ========================= */
+
+footer {
+    border-top: 1px solid var(--borde);
+
+    padding: 20px 4%;
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    background: white;
+}
+
+
+/* =========================
+   AVISOS
+   ========================= */
+
+.aviso {
+    padding: 16px 20px;
+
+    border-radius: 8px;
+
+    background: #eef2fb;
+
+    margin-bottom: 20px;
+}
+
+.aviso.exito {
+    background: #e9f6ef;
+    color: #13653f;
+}
+
+.aviso.error {
+    background: #fff0f1;
+    color: #9c2633;
+}
+
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 1050px) {
+
+    .contenedor {
+        padding: 24px;
+    }
+
+}
+
+
+/* =========================
+   MÓVIL
+   ========================= */
+
+@media (max-width: 700px) {
+
+    .contenedor {
+        padding: 22px 16px;
+    }
+
+    .titulo-pagina {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+
+    .tarjeta {
+        padding: 22px;
+    }
+
+    .sin-padding {
+        padding: 0;
+    }
+
+    /*
+       Los tickets se acomodan
+       verticalmente en móvil
+    */
+
+    .notificacion {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .notificacion > form {
+        margin-left: 52px;
+    }
+
+    /*
+       Evitamos que el zoom
+       provoque desbordamiento
+       en pantallas pequeñas.
+    */
+
+    .notificacion:hover {
+        transform: scale(1.01);
+
+        box-shadow: 0 4px 14px rgba(35, 75, 196, 0.15);
+    }
+
+    footer {
+        gap: 12px;
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block titulo %}Nexo TI{% endblock %} · Soporte TI</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base_comun.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/usuarios_m1.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tickets_m2.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/sla_m4.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/notificaciones_m5.css') }}">
+  {% if usuario_actual %}<script src="{{ url_for('static', filename='js/notificaciones_m5.js') }}" defer></script>{% endif %}
+  {% block scripts %}{% endblock %}
+</head>
+
+<body{% if request.endpoint == 'login' %} class="pagina-login"{% endif %}>
+  <a class="saltar" href="#contenido">Ir al contenido</a>
+  <header class="cabecera">
+    <a class="marca" href="{{ url_for('index') }}"><span class="isotipo">N</span> Nexo<span>TI</span></a>
+    {% if usuario_actual %}
+    <nav aria-label="Menú principal">
+      <a href="{{ url_for('tickets') }}" {% if request.endpoint in ['tickets','ticket_detalle','ticket_nuevo']
+        %}aria-current="page" {% endif %}>Tickets</a>
+      {% if usuario_actual.rol == 'Administrador' %}<a href="{{ url_for('usuarios') }}" {% if request.endpoint in
+        ['usuarios','usuario_form'] %}aria-current="page" {% endif %}>Usuarios</a>{% endif %}
+      {% if usuario_actual.rol == 'Administrador' %}
+      <a href="{{ url_for('dashboard') }}" {% if request.endpoint=='dashboard' %}aria-current="page" {% endif
+        %}>Dashboard</a>
+      <a href="{{ url_for('reportes') }}" {% if request.endpoint=='reportes' %}aria-current="page" {% endif
+        %}>Reportes</a>
+      {% endif %}
+      <a href="{{ url_for('sla') }}" {% if request.endpoint=='sla' %}aria-current="page" {% endif %}>Tiempos de
+        atención</a>
+      <a class="campana" href="{{ url_for('notificaciones') }}" {% if request.endpoint=='notificaciones'
+        %}aria-current="page" {% endif %}>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" />
+        </svg>
+        Notificaciones <span id="contador" data-url="{{ url_for('contador_notificaciones') }}" aria-live="polite">{{
+          no_leidas }}</span>
+      </a>
+    </nav>
+    <div class="cuenta"><span>{{ usuario_actual.nombre }}<small>{{ 'Técnico' if usuario_actual.rol == 'Tecnico' else
+          usuario_actual.rol }}</small></span>
+      <form action="{{ url_for('logout') }}" method="POST"><input type="hidden" name="csrf_token"
+          value="{{ csrf_token }}"><button class="boton accion-peligro" type="submit">Salir</button></form>
+    </div>
+    {% else %}<span class="etiqueta-portal">Portal de soporte interno</span>{% endif %}
+  </header>
+  <main id="contenido" class="contenedor">
+    {% for tipo, mensaje in get_flashed_messages(with_categories=true) %}<div class="aviso {{ tipo }}" role="status">{{
+      mensaje }}</div>{% endfor %}
+    {% if errores %}<div class="aviso error" role="alert"><strong>Revisa la información:</strong>
+      <ul>{% for error in errores %}<li>{{ error }}</li>{% endfor %}</ul>
+    </div>{% endif %}
+    {% block contenido %}{% endblock %}
+  </main>
+  <footer class="pie-pagina"><div class="pie-marca"><span class="isotipo" aria-hidden="true">N</span><div><strong>Nexo TI</strong><p>Tu mesa de ayuda, en un solo lugar.</p></div></div><div class="pie-contexto"><span>Soporte y seguimiento de solicitudes</span><small>Hora de Perú · UTC−5</small></div></footer>
+</body>
+
+</html>

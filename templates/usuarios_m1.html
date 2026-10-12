@@ -1,0 +1,36 @@
+{% extends 'base_comun.html' %}
+{% block titulo %}Usuarios{% endblock %}
+{% block contenido %}
+<div class="titulo-pagina">
+    <div>
+        <p class="sobretitulo">ADMINISTRACIÓN</p>
+        <h1>Usuarios y accesos</h1>
+        <p class="secundario">Gestiona las cuentas de quienes utilizan la mesa de ayuda.</p>
+    </div><a class="boton primario" href="{{ url_for('usuario_form') }}">+ Registrar usuario</a>
+</div>
+<section class="tarjeta sin-padding">
+    <div class="tabla-scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Correo electrónico</th>
+                    <th>Rol</th>
+                    <th>Acceso</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>{% for u in usuarios %}<tr>
+                    <td><strong>{{ u.nombre }} {{ u.apellido }}</strong><small>#{{ u.id }}</small></td>
+                    <td>{{ u.email }}</td>
+                    <td>{{ 'Técnico' if u.rol == 'Tecnico' else u.rol }}</td>
+                    <td><span class="semaforo {{ 'verde' if u.activo else 'rojo' }}">{{ 'Activo' if u.activo else
+                            'Inactivo' }}</span></td>
+                    <td><a href="{{ url_for('usuario_form', usuario_id=u.id) }}">Editar acceso →</a></td>
+                </tr>{% else %}<tr>
+                    <td colspan="5" class="vacio">No hay usuarios registrados.</td>
+                </tr>{% endfor %}</tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

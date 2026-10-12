@@ -1,0 +1,7 @@
+{% extends 'base_comun.html' %}
+{% block titulo %}Aviso {{ codigo }}{% endblock %}
+{% block contenido %}<section class="tarjeta vacio">
+    <p class="sobretitulo">AVISO {{ codigo }}</p>
+    <h1>No se pudo completar la solicitud</h1>
+    <p>{{ mensaje }}</p><a class="boton primario" href="{{ url_for('index') }}">Volver al inicio</a>
+</section>{% endblock %}

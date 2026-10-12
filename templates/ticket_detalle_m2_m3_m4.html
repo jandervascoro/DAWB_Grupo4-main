@@ -1,0 +1,100 @@
+{% extends 'base_comun.html' %}
+{% block titulo %}Ticket #{{ ticket.id }}{% endblock %}
+{% block contenido %}
+<a class="volver" href="{{ url_for('tickets') }}">← Volver a tickets</a>
+<div class="titulo-pagina">
+    <div>
+        <p class="sobretitulo">SOLICITUD #{{ '%04d'|format(ticket.id) }}</p>
+        <h1>{{ ticket.asunto }}</h1>
+        <p class="secundario">Registrado por {{ ticket.solicitante }} · {{ ticket.created_at|fecha }}</p>
+    </div><span class="estado grande">{{ ticket.estado }}</span>
+</div>
+<div class="acciones mb-3">
+{% if puede_editar %}<a class="boton" href="{{ url_for('ticket_editar',ticket_id=ticket.id) }}">Editar datos</a>{% endif %}
+{% if ticket.archivado %}<span class="badge text-bg-secondary">Archivado</span>{% elif usuario_actual.rol=='Administrador' and ticket.estado=='Cerrado' %}
+<form method="POST" action="{{ url_for('ticket_archivar',ticket_id=ticket.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="boton">Archivar ticket</button></form>{% endif %}
+</div>
+<div class="dos-columnas">
+    <div>
+        <section class="tarjeta">
+            <h2>Descripción del incidente</h2>
+            <p class="texto-largo">{{ ticket.descripcion }}</p>
+            <div class="metadatos"><span>Categoría <strong>{{ ticket.categoria }}</strong></span><span>Prioridad
+                    <strong>{{ ticket.prioridad }}</strong></span><span>Responsable <strong>{{ ticket.tecnico or 'Sin
+                        asignar' }}</strong></span></div>
+            <h3>Evidencias fotográficas</h3>
+            <div class="galeria" id="galeriaEvidencias">{% for f in fotos %}<a href="{{ url_for('ver_foto', foto_id=f.id) }}" target="_blank"
+                    rel="noopener" title="Ver imagen completa"><img src="{{ url_for('ver_foto', foto_id=f.id, mini=1) }}"
+                        alt="{{ f.nombre_original }}"><small>{{ f.nombre_original }}</small></a>{% else %}<p
+                    class="secundario">No se adjuntaron fotos a esta solicitud.</p>{% endfor %}</div>
+        </section>
+        <section class="tarjeta">
+            <h2>Historial de atención</h2>
+            <p class="secundario">Registro de asignaciones, estados y comentarios.</p>
+            <ol class="timeline">{% for h in historial %}<li>
+                    <div class="evento-cabecera"><strong>{{ h.tipo }} · {{ h.autor }}</strong><time
+                            title="{{ h.created_at|fecha }}">{{ h.created_at|relativa }}</time></div>{% if
+                    h.estado_nuevo %}<span class="estado">{{ h.estado_anterior or 'Inicio' }} → {{ h.estado_nuevo
+                        }}</span>{% endif %}{% if h.tipo == 'Asignacion' %}<small>Técnico #{{ h.tecnico_anterior_id or
+                        '—' }} → Técnico #{{ h.tecnico_nuevo_id }}</small>{% endif %}<p class="texto-largo">{{
+                        h.comentario }}</p><small>{{ h.created_at|fecha }}</small>
+                </li>{% endfor %}</ol>
+            {% if ticket.estado != 'Cerrado' %}<form method="POST"
+                action="{{ url_for('agregar_comentario', ticket_id=ticket.id) }}" class="formulario"><input
+                    type="hidden" name="csrf_token" value="{{ csrf_token }}"><label for="comentario">Agregar un
+                    comentario</label><textarea id="comentario" name="comentario" rows="3" minlength="3"
+                    maxlength="2000" required placeholder="Comparte información sobre esta solicitud"></textarea><button
+                    class="boton accion-confirmar" type="submit">Publicar comentario</button></form>{% else %}<p class="aviso">Este
+                ticket está cerrado. Su historial permanece disponible para consulta.</p>{% endif %}
+        </section>
+    </div>
+    <aside>
+        <section class="tarjeta">
+            <p class="sobretitulo">TIEMPO DE ATENCIÓN</p>
+            <h2><span class="semaforo {{ ticket.sla.color }}">● {{ ticket.sla.texto }}</span></h2>
+            <progress class="barra {{ ticket.sla.color }}" value="{{ ticket.sla.porcentaje }}" max="100"
+                aria-label="Porcentaje del plazo SLA consumido">{{ ticket.sla.porcentaje }}%</progress>
+            <dl>
+                <dt>Fecha límite</dt>
+                <dd>{{ ticket.fecha_limite|fecha }}</dd>{% if ticket.fecha_resolucion %}<dt>Resolución registrada</dt>
+                <dd>{{ ticket.fecha_resolucion|fecha }}</dd>{% else %}<dt>Tiempo restante</dt>
+                <dd>{{ ticket.sla.restante }}</dd>{% endif %}
+            </dl><a href="{{ url_for('sla') }}">¿Cómo se calcula el SLA?</a>
+        </section>
+        {% if usuario_actual.rol == 'Administrador' and ticket.estado in ['Abierto','En proceso'] %}<section
+            class="tarjeta">
+            <h2>Asignar responsable</h2>
+            <form method="POST" action="{{ url_for('asignar_ticket', ticket_id=ticket.id) }}" class="formulario"><input
+                    type="hidden" name="csrf_token" value="{{ csrf_token }}"><label
+                    for="tecnico_id">Técnico</label><select name="tecnico_id" id="tecnico_id" required>
+                    <option value="">Selecciona un técnico</option>{% for t in tecnicos %}<option value="{{ t.id }}" {%
+                        if ticket.tecnico_id==t.id %}disabled{% endif %}>{{ t.nombre }} {{ t.apellido }}{% if
+                        ticket.tecnico_id == t.id %} (actual){% endif %}</option>{% endfor %}
+                </select><label for="motivo">Motivo de asignación</label><textarea id="motivo" name="comentario"
+                    rows="3" minlength="3" maxlength="2000" required></textarea><button class="boton primario accion-confirmar">Guardar
+                    asignación</button></form>
+        </section>{% endif %}
+        {% if puede_cambiar and siguientes %}<section class="tarjeta">
+            <h2>Actualizar estado</h2>
+            <form method="POST" action="{{ url_for('cambiar_estado', ticket_id=ticket.id) }}" class="formulario"><input
+                    type="hidden" name="csrf_token" value="{{ csrf_token }}"><label for="estado">Siguiente
+                    estado</label><select name="estado" id="estado" required>{% for e in siguientes %}<option>{{ e }}
+                    </option>{% endfor %}</select><label for="comentarioEstado">Comentario técnico *</label><textarea
+                    id="comentarioEstado" name="comentario" rows="4" minlength="3" maxlength="2000" required
+                    placeholder="Describe el trabajo realizado"></textarea><button class="boton primario accion-confirmar">Actualizar
+                    estado</button></form>
+        </section>{% endif %}
+    </aside>
+</div>
+<dialog id="visorFoto" aria-labelledby="tituloVisor">
+    <div class="visor-controles"><strong id="tituloVisor">Evidencia fotográfica</strong>
+        <button type="button" id="alejarFoto" class="boton" aria-label="Reducir imagen">−</button>
+        <span id="nivelZoom" aria-live="polite">100%</span>
+        <button type="button" id="acercarFoto" class="boton" aria-label="Ampliar imagen">+</button>
+        <button type="button" id="ajustarFoto" class="boton">Ajustar</button>
+        <button type="button" id="cerrarVisor" class="boton accion-peligro">Cerrar</button>
+    </div>
+    <div class="visor-contenido"><img id="imagenVisor" class="zoom-1" alt=""></div>
+</dialog>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/visor_m2.js') }}" defer></script>{% endblock %}

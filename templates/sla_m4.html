@@ -1,0 +1,40 @@
+{% extends 'base_comun.html' %}
+{% block titulo %}Tiempos de atención{% endblock %}
+{% block contenido %}
+<div class="titulo-pagina">
+    <div>
+        <p class="sobretitulo">ACUERDOS DE SERVICIO</p>
+        <h1>Tiempos de atención</h1>
+        <p class="secundario">Cada prioridad tiene un tiempo máximo de resolución.</p>
+    </div><a class="boton" href="{{ url_for('tickets') }}">Ver tickets</a>
+</div>
+<div class="tres-columnas">{% for p in prioridades %}<section class="tarjeta"><span
+            class="prioridad {{ p.nombre|lower }}">Prioridad {{ p.nombre }}</span>
+        <p class="tiempo-sla">{{ p.horas_sla }}<span> horas</span></p>
+        <p class="secundario">Tiempo máximo desde el registro del ticket.</p>
+    </section>{% endfor %}</div>
+<section class="tarjeta">
+    <h2>Cómo interpretar el semáforo</h2>
+    <div class="tres-columnas">
+        <div>
+            <h3 class="semaforo verde">● En plazo</h3>
+            <p>Ha transcurrido menos del 75% del tiempo disponible.</p>
+        </div>
+        <div>
+            <h3 class="semaforo amarillo">● Por vencer</h3>
+            <p>Ha transcurrido desde el 75% hasta menos del 100% del tiempo.</p>
+        </div>
+        <div>
+            <h3 class="semaforo rojo">● Vencido</h3>
+            <p>Se alcanzó o superó la fecha límite de resolución.</p>
+        </div>
+    </div>
+    <hr>
+    <p>Se cuentan horas continuas, incluyendo noches y fines de semana. La asignación y los comentarios no reinician el
+        plazo.</p>
+    <p>Al registrar la resolución, el cálculo se detiene y conserva si se resolvió a tiempo o fuera de plazo. Resolver
+        exactamente en la fecha límite cuenta como cumplimiento.</p>
+    <p class="secundario">Ejemplo: un ticket de prioridad Alta entra en amarillo a las 3 horas y vence a las 4 horas.
+        Actualiza el listado o el detalle para recalcular el tiempo.</p>
+</section>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base_comun.html' %}
+{% block titulo %}Notificaciones{% endblock %}
+{% block contenido %}
+<div class="titulo-pagina">
+    <div>
+        <p class="sobretitulo">ACTIVIDAD DE TUS SOLICITUDES</p>
+        <h1>Notificaciones</h1>
+        <p class="secundario">Asignaciones, cambios de estado y nuevos comentarios.</p>
+    </div>
+    <form method="POST" action="{{ url_for('leer_todas') }}"><input type="hidden" name="csrf_token"
+            value="{{ csrf_token }}"><button class="boton accion-confirmar" {% if not no_leidas %}disabled{% endif %}>Marcar todas como
+            leídas</button></form>
+</div>
+<section class="tarjeta sin-padding">{% for n in notificaciones %}<article
+        class="notificacion {{ 'pendiente' if not n.leido else '' }}"><span class="icono-texto" aria-hidden="true">{{
+            '✓' if n.leido else '•' }}</span>
+        <div>
+            <p class="sobretitulo">{{ n.tipo }} · {{ 'Leída' if n.leido else 'No leída' }}</p>
+            <h2><a href="{{ url_for('ticket_detalle', ticket_id=n.referencia_ticket) }}">{{ n.mensaje }}</a></h2><small
+                title="{{ n.created_at|fecha }}">{{ n.created_at|relativa }} · {{ n.created_at|fecha }}</small>
+        </div>{% if not n.leido %}<form action="{{ url_for('leer_notificacion', notificacion_id=n.id) }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="boton accion-confirmar">Marcar leída</button>
+        </form>{% endif %}
+    </article>{% else %}<div class="vacio">
+        <h2>Todo al día</h2>
+        <p>Aquí aparecerán las novedades de tus tickets.</p><a href="{{ url_for('tickets') }}">Volver a mis tickets
+            →</a>
+    </div>{% endfor %}</section>
+{% endblock %}

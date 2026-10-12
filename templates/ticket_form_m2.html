@@ -1,0 +1,69 @@
+{% extends 'base_comun.html' %}
+{% block titulo %}Nuevo ticket{% endblock %}
+{% block contenido %}
+<a class="volver" href="{{ url_for('tickets') }}">← Volver a tickets</a>
+<div class="titulo-pagina">
+    <div>
+        <p class="sobretitulo">NUEVA SOLICITUD</p>
+        <h1>Cuéntanos qué ocurre</h1>
+        <p class="secundario">Incluye los detalles necesarios para que podamos ayudarte.</p>
+    </div>
+</div>
+<div class="dos-columnas">
+    <section class="tarjeta">
+        <form method="POST" enctype="multipart/form-data" class="formulario" id="formTicket">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <label for="asunto">Asunto *</label><input id="asunto" name="asunto" minlength="5" maxlength="150" required
+                placeholder="Ej. No puedo conectarme a la red de la oficina"
+                value="{{ request.form.get('asunto','') }}">
+            <label for="descripcion">Descripción del incidente *</label><textarea id="descripcion" name="descripcion"
+                rows="6" minlength="10" maxlength="5000" required
+                placeholder="¿Qué ocurrió? ¿Desde cuándo? ¿Qué intentaste hacer?">{{ request.form.get('descripcion','') }}</textarea>
+            <div class="fila-form">
+                <div><label for="categoria_id">Categoría *</label><select name="categoria_id" id="categoria_id"
+                        required>
+                        <option value="">Selecciona una categoría</option>{% for c in categorias %}<option
+                            value="{{ c.id }}" {% if request.form.get('categoria_id')==c.id|string %}selected{% endif
+                            %}>{{ c.nombre }}</option>{% endfor %}
+                    </select></div>
+                <div><label for="prioridad_id">Prioridad *</label><select name="prioridad_id" id="prioridad_id"
+                        required>
+                        <option value="">Selecciona la prioridad</option>{% for p in prioridades %}<option
+                            value="{{ p.id }}" {% if request.form.get('prioridad_id')==p.id|string %}selected{% endif
+                            %}>{{ p.nombre }} · {{ p.horas_sla }} h</option>{% endfor %}
+                    </select></div>
+            </div>
+            <label for="fotos">Fotos de evidencia <span class="secundario">(opcional)</span></label>
+            <div class="adjuntos">
+                <div class="upload-actions">
+                    <button type="button" class="boton archivo" id="elegirFotos">Elegir archivos</button>
+                    <button type="button" id="quitarFotos" class="boton accion-peligro oculto">Quitar todas</button>
+                    <span id="nombresArchivos" class="archivo-seleccionado">Ningún archivo seleccionado</span>
+                </div>
+                <input id="fotos" name="fotos" type="file" multiple
+                    accept="image/jpeg,image/png,image/webp" aria-describedby="ayudaFotos" hidden>
+                <p id="ayudaFotos">Añade hasta 3 imágenes JPG, PNG o WebP, juntas o una por una. Máximo 5 MB por imagen.</p>
+                <p id="errorFotos" class="texto-error" role="alert"></p>
+                <div id="vistaPrevia" class="galeria"></div>
+            </div>
+            <p class="ayuda">Solicitante: {{ usuario_actual.nombre }} {{ usuario_actual.apellido }}. Se registra
+                automáticamente con tu cuenta.</p>
+            <div class="acciones"><button class="boton primario accion-confirmar" type="submit">Registrar ticket</button><a class="boton accion-peligro"
+                    href="{{ url_for('tickets') }}">Cancelar</a></div>
+        </form>
+    </section>
+    <aside>
+        <section class="tarjeta consejo"><span class="icono-texto">i</span>
+            <h2>Una solicitud más clara</h2>
+            <p>Describe un solo problema por ticket y adjunta capturas donde pueda verse el error.</p>
+            <hr>
+            <h3>Elige la prioridad</h3>
+            <p><strong>Alta · 4 horas</strong><br>Interrupción crítica de tu trabajo.</p>
+            <p><strong>Media · 24 horas</strong><br>Dificultad que permite continuar parcialmente.</p>
+            <p><strong>Baja · 72 horas</strong><br>Consulta o inconveniente menor.</p><a href="{{ url_for('sla') }}">Ver
+                tiempos de atención →</a>
+        </section>
+    </aside>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/tickets_m2.js') }}" defer></script>{% endblock %}

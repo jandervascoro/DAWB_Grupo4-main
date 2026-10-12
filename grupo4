@@ -1,0 +1,15 @@
+Grupo 4
+
+py -3 -m venv .venv
+.venv\Scripts\actívate
+pip install flask
+pip install pymysql
+flask --app main run --debug
+
+py -3 -m venv .venv
+.\.venv\Scripts\python -m pip install -r requirements.txt
+.\.venv\Scripts\python main_comun.py
+
+| admin@demo.local | Administrador | AvanceTI2026! |
+| tecnico@demo.local | Técnico | AvanceTI2026! |
+| solicitante@demo.local | Solicitante | AvanceTI2026! |

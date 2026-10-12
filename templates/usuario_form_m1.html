@@ -1,0 +1,48 @@
+{% extends 'base_comun.html' %}
+{% block titulo %}{{ 'Editar' if usuario else 'Registrar' }} usuario{% endblock %}
+{% block contenido %}
+<a class="volver" href="{{ url_for('usuarios') }}">← Volver a usuarios</a>
+<div class="titulo-pagina">
+    <div>
+        <p class="sobretitulo">ADMINISTRACIÓN</p>
+        <h1>{{ 'Editar' if usuario else 'Registrar' }} usuario</h1>
+        <p class="secundario">Asigna el rol y el acceso que necesita cada persona.</p>
+    </div>
+</div>
+<section class="tarjeta formulario-centrado">
+    <form method="POST" class="formulario" id="formUsuario"><input type="hidden" name="csrf_token"
+            value="{{ csrf_token }}">
+        <div class="fila-form">
+            <div><label for="nombre">Nombre *</label><input id="nombre" name="nombre" minlength="2" maxlength="50"
+                    required value="{{ request.form.get('nombre', usuario.nombre if usuario else '') }}"></div>
+            <div><label for="apellido">Apellido *</label><input id="apellido" name="apellido" minlength="2"
+                    maxlength="50" required
+                    value="{{ request.form.get('apellido', usuario.apellido if usuario else '') }}"></div>
+        </div>
+        <label for="email">Correo electrónico *</label><input id="email" name="email" type="email" maxlength="120"
+            required value="{{ request.form.get('email', usuario.email if usuario else '') }}">
+        <div class="fila-form">
+            <div><label for="rol">Rol *</label><select id="rol" name="rol" required>{% for r in roles %}<option
+                        value="{{ r }}" {% if request.form.get('rol', usuario.rol if usuario else 'Solicitante' )==r
+                        %}selected{% endif %}>{{ 'Técnico' if r == 'Tecnico' else r }}</option>{% endfor %}</select>
+            </div>
+            <div><label for="activo">Estado de acceso</label><select id="activo" name="activo">
+                    <option value="1" {% if request.form.get('activo', (usuario.activo|string) if usuario else '1'
+                        )=='1' %}selected{% endif %}>Activo</option>
+                    <option value="0" {% if request.form.get('activo', (usuario.activo|string) if usuario else '1'
+                        )=='0' %}selected{% endif %}>Inactivo</option>
+                </select></div>
+        </div>
+        <label for="password">{{ 'Nueva contraseña (opcional)' if usuario else 'Contraseña *' }}</label><input
+            id="password" name="password" type="password" minlength="8" maxlength="128" autocomplete="new-password" {%
+            if not usuario %}required{% endif %}><small>Entre 8 y 128 caracteres.{% if usuario %} Déjala vacía para
+            conservar la actual.{% endif %}</small>
+        <label for="confirm_password">Confirmar contraseña</label><input id="confirm_password" name="confirm_password"
+            type="password" maxlength="128" autocomplete="new-password" {% if not usuario %}required{% endif %}>
+        <p id="errorPassword" class="texto-error" role="alert"></p>
+        <div class="acciones"><button type="submit" class="boton primario accion-confirmar">Guardar usuario</button><a
+                href="{{ url_for('usuarios') }}" class="boton accion-peligro">Cancelar</a></div>
+    </form>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/usuarios_m1.js') }}" defer></script>{% endblock %}

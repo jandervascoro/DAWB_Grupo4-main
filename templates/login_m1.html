@@ -1,0 +1,31 @@
+{% extends 'base_comun.html' %}
+{% block titulo %}Iniciar sesión{% endblock %}
+{% block contenido %}
+<div class="acceso">
+  <section class="presentacion">
+    <p class="sobretitulo">SOPORTE QUE TE ACOMPAÑA</p>
+    <h1>Tu solicitud.<br>Un seguimiento claro.</h1>
+    <p>Reporta un incidente, comparte evidencias y conoce el avance de su atención en un solo lugar.</p>
+    <ol class="pasos">
+      <li><span>01</span> Registra tu solicitud</li>
+      <li><span>02</span> Un técnico se hace cargo</li>
+      <li><span>03</span> Sigue la solución</li>
+    </ol>
+    <div class="nota">Cada detalle ayuda a resolverlo mejor.</div>
+  </section>
+  <section class="tarjeta login">
+    <p class="sobretitulo">BIENVENIDO A NEXO TI</p>
+    <h2>Iniciar sesión</h2>
+    <p class="secundario">Ingresa con tu cuenta de la empresa.</p>
+    <form method="POST" class="formulario">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <label for="email">Correo electrónico</label><input id="email" name="email" type="email" maxlength="120" required
+        autocomplete="username" placeholder="nombre@empresa.com" value="{{ request.form.get('email','') }}">
+      <label for="password">Contraseña</label><input id="password" name="password" type="password" maxlength="128"
+        required autocomplete="current-password">
+      <button type="submit" class="boton primario ancho accion-confirmar">Ingresar</button>
+    </form>
+    <p class="ayuda">Si necesitas una cuenta o recuperar tu acceso, comunícate con el administrador de TI.</p>
+  </section>
+</div>
+{% endblock %}
