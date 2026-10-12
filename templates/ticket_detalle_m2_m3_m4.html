@@ -10,9 +10,12 @@
     </div><span class="estado grande">{{ ticket.estado }}</span>
 </div>
 <div class="acciones mb-3">
-{% if puede_editar %}<a class="boton" href="{{ url_for('ticket_editar',ticket_id=ticket.id) }}">Editar datos</a>{% endif %}
-{% if ticket.archivado %}<span class="badge text-bg-secondary">Archivado</span>{% elif usuario_actual.rol=='Administrador' and ticket.estado=='Cerrado' %}
-<form method="POST" action="{{ url_for('ticket_archivar',ticket_id=ticket.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="boton">Archivar ticket</button></form>{% endif %}
+    {% if puede_editar %}<a class="boton" href="{{ url_for('ticket_editar',ticket_id=ticket.id) }}">Editar datos</a>{%
+    endif %}
+    {% if ticket.archivado %}<span class="badge text-bg-secondary">Archivado</span>{% elif
+    usuario_actual.rol=='Administrador' and ticket.estado=='Cerrado' %}
+    <form method="POST" action="{{ url_for('ticket_archivar',ticket_id=ticket.id) }}"><input type="hidden"
+            name="csrf_token" value="{{ csrf_token }}"><button class="boton">Archivar ticket</button></form>{% endif %}
 </div>
 <div class="dos-columnas">
     <div>
@@ -23,8 +26,9 @@
                     <strong>{{ ticket.prioridad }}</strong></span><span>Responsable <strong>{{ ticket.tecnico or 'Sin
                         asignar' }}</strong></span></div>
             <h3>Evidencias fotográficas</h3>
-            <div class="galeria" id="galeriaEvidencias">{% for f in fotos %}<a href="{{ url_for('ver_foto', foto_id=f.id) }}" target="_blank"
-                    rel="noopener" title="Ver imagen completa"><img src="{{ url_for('ver_foto', foto_id=f.id, mini=1) }}"
+            <div class="galeria" id="galeriaEvidencias">{% for f in fotos %}<a
+                    href="{{ url_for('ver_foto', foto_id=f.id) }}" target="_blank" rel="noopener"
+                    title="Ver imagen completa"><img src="{{ url_for('ver_foto', foto_id=f.id, mini=1) }}"
                         alt="{{ f.nombre_original }}"><small>{{ f.nombre_original }}</small></a>{% else %}<p
                     class="secundario">No se adjuntaron fotos a esta solicitud.</p>{% endfor %}</div>
         </section>
@@ -44,7 +48,8 @@
                     type="hidden" name="csrf_token" value="{{ csrf_token }}"><label for="comentario">Agregar un
                     comentario</label><textarea id="comentario" name="comentario" rows="3" minlength="3"
                     maxlength="2000" required placeholder="Comparte información sobre esta solicitud"></textarea><button
-                    class="boton accion-confirmar" type="submit">Publicar comentario</button></form>{% else %}<p class="aviso">Este
+                    class="boton accion-confirmar" type="submit">Publicar comentario</button></form>{% else %}<p
+                class="aviso">Este
                 ticket está cerrado. Su historial permanece disponible para consulta.</p>{% endif %}
         </section>
     </div>
@@ -71,7 +76,8 @@
                         if ticket.tecnico_id==t.id %}disabled{% endif %}>{{ t.nombre }} {{ t.apellido }}{% if
                         ticket.tecnico_id == t.id %} (actual){% endif %}</option>{% endfor %}
                 </select><label for="motivo">Motivo de asignación</label><textarea id="motivo" name="comentario"
-                    rows="3" minlength="3" maxlength="2000" required></textarea><button class="boton primario accion-confirmar">Guardar
+                    rows="3" minlength="3" maxlength="2000" required></textarea><button
+                    class="boton primario accion-confirmar">Guardar
                     asignación</button></form>
         </section>{% endif %}
         {% if puede_cambiar and siguientes %}<section class="tarjeta">
@@ -81,7 +87,8 @@
                     estado</label><select name="estado" id="estado" required>{% for e in siguientes %}<option>{{ e }}
                     </option>{% endfor %}</select><label for="comentarioEstado">Comentario técnico *</label><textarea
                     id="comentarioEstado" name="comentario" rows="4" minlength="3" maxlength="2000" required
-                    placeholder="Describe el trabajo realizado"></textarea><button class="boton primario accion-confirmar">Actualizar
+                    placeholder="Describe el trabajo realizado"></textarea><button
+                    class="boton primario accion-confirmar">Actualizar
                     estado</button></form>
         </section>{% endif %}
     </aside>
@@ -97,4 +104,5 @@
     <div class="visor-contenido"><img id="imagenVisor" class="zoom-1" alt=""></div>
 </dialog>
 {% endblock %}
-{% block scripts %}<script src="{{ url_for('static', filename='js/visor_m2.js') }}" defer></script>{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/visor_m2.js') }}" defer></script>{% endblock %}
